@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Meghana 💖</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+overflow:hidden;
+font-family:'Segoe UI',sans-serif;
+background:radial-gradient(circle at bottom,#0f2027,#203a43,#2c5364);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+color:white;
+}
+
+/* MOON */
+#moon{
+position:absolute;
+top:60px;
+right:80px;
+width:120px;
+height:120px;
+background:radial-gradient(circle,#fff,#ddd);
+border-radius:50%;
+box-shadow:0 0 40px white;
+z-index:0;
+}
+
+/* GIFT */
+#gift{
+width:150px;
+height:150px;
+background:#ff4d6d;
+position:relative;
+cursor:pointer;
+border-radius:12px;
+animation:bounce 1.5s infinite;
+z-index:5;
+}
+#lid{
+position:absolute;
+width:150px;
+height:35px;
+background:#c9184a;
+top:-35px;
+left:0;
+border-radius:12px 12px 0 0;
+transition:all 1s ease;
+}
+#gift::after{
+content:"🎁";
+font-size:60px;
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+}
+
+@keyframes bounce{
+0%,100%{transform:translateY(0);}
+50%{transform:translateY(-15px);}
+}
+
+/* FLASH */
+#flash{
+position:absolute;
+width:100%;
+height:100%;
+background:white;
+opacity:0;
+z-index:8;
+transition:opacity 0.3s ease;
+}
+
+/* CONTENT */
+#content{
+display:none;
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:90%;
+text-align:center;
+z-index:10;
+}
+
+#main{
+font-size:3em;
+text-shadow:0 0 20px #fff,0 0 40px #ff69b4;
+animation:glow 2s infinite alternate;
+}
+
+#sub{
+margin-top:20px;
+font-size:1.6em;
+line-height:1.6em;
+}
+
+@keyframes glow{
+from{text-shadow:0 0 10px #fff,0 0 20px #ff69b4;}
+to{text-shadow:0 0 40px #fff,0 0 60px gold;}
+}
+
+/* RING */
+#ring{
+font-size:60px;
+margin-top:30px;
+animation:float 3s infinite ease-in-out;
+}
+
+@keyframes float{
+0%,100%{transform:translateY(0);}
+50%{transform:translateY(-15px);}
+}
+
+/* HEARTS */
+.heart{
+position:absolute;
+width:20px;
+height:20px;
+background:red;
+transform:rotate(45deg);
+animation:rise linear infinite;
+z-index:2;
+}
+.heart::before,.heart::after{
+content:"";
+position:absolute;
+width:20px;
+height:20px;
+background:red;
+border-radius:50%;
+}
+.heart::before{top:-10px;left:0;}
+.heart::after{left:-10px;top:0;}
+
+@keyframes rise{
+to{transform:translateY(-100vh) rotate(45deg);opacity:0;}
+}
+
+canvas{
+position:absolute;
+top:0;
+left:0;
+z-index:1;
+}
+</style>
+</head>
+
+<body>
+
+<div id="moon"></div>
+
+<div id="gift">
+<div id="lid"></div>
+</div>
+
+<div id="flash"></div>
+
+<div id="content">
+<div id="main">💖 Congratulations My Love, MEGHANA 💖</div>
+<div id="sub">
+You make my world brighter than fireworks ✨<br>
+Every moment with you feels like Heaven 🌸<br>
+You Are My Destiny 💞
+</div>
+<div id="ring">💍</div>
+</div>
+
+<canvas id="fireworks"></canvas>
+
+<script>
+const gift=document.getElementById("gift");
+const lid=document.getElementById("lid");
+const content=document.getElementById("content");
+const flash=document.getElementById("flash");
+
+gift.addEventListener("click",()=>{
+lid.style.transform="translateY(-120px) rotate(-20deg)";
+flash.style.opacity="1";
+
+setTimeout(()=>{
+flash.style.opacity="0";
+},300);
+
+setTimeout(()=>{
+gift.style.display="none";
+content.style.display="block";
+startCelebration();
+},800);
+});
+
+/* FIREWORKS */
+const canvas=document.getElementById("fireworks");
+const ctx=canvas.getContext("2d");
+canvas.width=innerWidth;
+canvas.height=innerHeight;
+
+let fireworks=[];
+
+class Firework{
+constructor(type="normal"){
+this.x=Math.random()*canvas.width;
+this.y=Math.random()*canvas.height/2;
+this.particles=[];
+for(let i=0;i<100;i++){
+let angle=Math.random()*2*Math.PI;
+let speed=Math.random()*6+2;
+
+if(type==="heart"){
+angle=Math.PI*2*i/100;
+speed=3;
+}
+
+this.particles.push({x:this.x,y:this.y,angle,speed,alpha:1});
+}
+this.type=type;
+}
+update(){
+this.particles.forEach(p=>{
+if(this.type==="heart"){
+p.x+=16*Math.pow(Math.sin(p.angle),3);
+p.y-=13*Math.cos(p.angle)-5*Math.cos(2*p.angle)-2*Math.cos(3*p.angle)-Math.cos(4*p.angle);
+}else{
+p.x+=Math.cos(p.angle)*p.speed;
+p.y+=Math.sin(p.angle)*p.speed;
+}
+p.alpha-=0.01;
+});
+}
+draw(){
+this.particles.forEach(p=>{
+ctx.globalAlpha=p.alpha;
+ctx.beginPath();
+ctx.arc(p.x,p.y,3,0,Math.PI*2);
+ctx.fillStyle=`hsl(${Math.random()*360},100%,70%)`;
+ctx.fill();
+});
+}
+}
+
+function startCelebration(){
+setInterval(createHeart,400);
+animate();
+}
+
+function animate(){
+ctx.fillStyle="rgba(0,0,0,0.2)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+fireworks.forEach((fw,i)=>{
+fw.update();
+fw.draw();
+if(fw.particles[0].alpha<=0)fireworks.splice(i,1);
+});
+
+if(Math.random()<0.07){
+let type=Math.random()<0.5?"normal":"heart";
+fireworks.push(new Firework(type));
+}
+
+requestAnimationFrame(animate);
+}
+
+function createHeart(){
+const heart=document.createElement("div");
+heart.classList.add("heart");
+heart.style.left=Math.random()*100+"vw";
+heart.style.bottom="-20px";
+heart.style.animationDuration=(Math.random()*4+4)+"s";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),8000);
+}
+
+window.addEventListener("resize",()=>{
+canvas.width=innerWidth;
+canvas.height=innerHeight;
+});
+</script>
+
+</body>
+</html>
